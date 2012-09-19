@@ -39,11 +39,11 @@ object BigIce {
   }
 
   def printUsage:Unit = {
-    println ("Listing all Vaults    - BigIce <AccessKey> <SecretKey> vaults")
-    println ("Creating a new Vault  - BigIce <AccessKey> <SecretKey> create <VaultName>")
-    println ("Deleting a Vault      - BigIce <AccessKey> <SecretKey> delete <VaultName>")
-    println ("List Jobs for a Vault - BigIce <AccessKey> <SecretKey> jobs <VaultName>")
-    println ("Backup an file        - BigIce <AccessKey> <SecretKey> upload <VaultName> <FileToBackup>")
+    println ("Listing all Vaults    - java -jar big-ice.jar <AccessKey> <SecretKey> vaults")
+    println ("Creating a new Vault  - java -jar big-ice.jar <AccessKey> <SecretKey> create <VaultName>")
+    println ("Deleting a Vault      - java -jar big-ice.jar <AccessKey> <SecretKey> delete <VaultName>")
+    println ("List Jobs for a Vault - java -jar big-ice.jar <AccessKey> <SecretKey> jobs <VaultName>")
+    println ("Backup an file        - java -jar big-ice.jar <AccessKey> <SecretKey> upload <VaultName> <FileToBackup>")
   }
   
   def upload(client: AmazonGlacierClient, credentials:AWSCredentials, vaultName: String, fileName: String): Unit = {
