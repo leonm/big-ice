@@ -12,15 +12,15 @@ Download the [big-ice.jar](https://s3.amazonaws.com/big-ice/big-ice.jar)
 
 All Big Ice commands require an Amazon Access Key and Secret Key.  You can get those at your [Amazon Security Credentials](https://portal.aws.amazon.com/gp/aws/securityCredentials)
 
-Listing all Vaults    - BigIce <AccessKey> <SecretKey> vaults
+Listing All Vaults    - java -jar big-ice.jar <AccessKey> <SecretKey> vaults
 
-Creating a new Vault  - BigIce <AccessKey> <SecretKey> create <VaultName>
+Creating a New Vault  - java -jar big-ice.jar <AccessKey> <SecretKey> create <VaultName>
 
-Deleting a Vault      - BigIce <AccessKey> <SecretKey> delete <VaultName>
+Deleting a Vault      - java -jar big-ice.jar <AccessKey> <SecretKey> delete <VaultName>
 
-List Jobs for a Vault - BigIce <AccessKey> <SecretKey> jobs <VaultName>
+List Jobs For a Vault - java -jar big-ice.jar <AccessKey> <SecretKey> jobs <VaultName>
 
-Backup an file        - BigIce <AccessKey> <SecretKey> upload <VaultName> <FileToBackup>
+Backup a File        - java -jar big-ice.jar <AccessKey> <SecretKey> upload <VaultName> <FileToBackup>
 
 
 ## Contributing
