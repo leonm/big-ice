@@ -14,23 +14,28 @@ All Big Ice commands require an Amazon Access Key and Secret Key.  You can get t
 
 Listing All Vaults    -
 ```bash
-java -jar big-ice.jar <AccessKey> <SecretKey> vaults```
+java -jar big-ice.jar <AccessKey> <SecretKey> vaults
+```
 
 Creating a New Vault  -
 ```bash
-java -jar big-ice.jar <AccessKey> <SecretKey> create <VaultName>```
+java -jar big-ice.jar <AccessKey> <SecretKey> create <VaultName>
+```
 
 Deleting a Vault      -
 ```bash
-java -jar big-ice.jar <AccessKey> <SecretKey> delete <VaultName>```
+java -jar big-ice.jar <AccessKey> <SecretKey> delete <VaultName>
+```
 
 List Jobs For a Vault -
 ```bash
-java -jar big-ice.jar <AccessKey> <SecretKey> jobs <VaultName>```
+java -jar big-ice.jar <AccessKey> <SecretKey> jobs <VaultName>
+```
 
 Backup a File         -
 ```bash
-java -jar big-ice.jar <AccessKey> <SecretKey> upload <VaultName> <FileToBackup```
+java -jar big-ice.jar <AccessKey> <SecretKey> upload <VaultName> <FileToBackup
+```
 
 
 ## Contributing
