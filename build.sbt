@@ -1,7 +1,10 @@
+import sbtassembly.Plugin._
 
 import AssemblyKeys._
 
-assemblySettings
+seq(assemblySettings: _*)
+
+jarName in assembly := "big-ice.jar"
 
 name := "BigIce"
 
