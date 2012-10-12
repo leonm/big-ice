@@ -1,5 +1,7 @@
 import java.io.File;
 
+import org.apache.commons.io.IOUtils
+
 import com.amazonaws.auth.AWSCredentials
 import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.services.glacier.AmazonGlacierClient
@@ -11,6 +13,8 @@ import com.amazonaws.services.glacier.model.CreateVaultRequest
 import com.amazonaws.services.glacier.model.DeleteVaultRequest
 import com.amazonaws.services.glacier.model.InitiateJobRequest
 import com.amazonaws.services.glacier.model.JobParameters
+import com.amazonaws.services.glacier.model.GetJobOutputRequest
+
 
 object BigIce {
 
@@ -35,6 +39,7 @@ object BigIce {
         case "delete" => delete(client,args(3))
         case "jobs" => jobs(client,args(3))
         case "inventory" => inventory(client,args(3),args(4))
+        case "job" => job(client,args(3),args(4))
         case _ => printUsage
       }
     }
@@ -42,12 +47,18 @@ object BigIce {
   }
 
   def printUsage:Unit = {
-    println ("Listing all Vaults    - java -jar big-ice.jar <AccessKey> <SecretKey> vaults")
-    println ("Creating a new Vault  - java -jar big-ice.jar <AccessKey> <SecretKey> create <VaultName>")
-    println ("Deleting a Vault      - java -jar big-ice.jar <AccessKey> <SecretKey> delete <VaultName>")
-    println ("List Jobs for a Vault - java -jar big-ice.jar <AccessKey> <SecretKey> jobs <VaultName>")
+    println ("Synchronous Operations")
+    println ("Listing all vaults    - java -jar big-ice.jar <AccessKey> <SecretKey> vaults")
+    println ("Creating a new vault  - java -jar big-ice.jar <AccessKey> <SecretKey> create <VaultName>")
+    println ("Deleting a vault      - java -jar big-ice.jar <AccessKey> <SecretKey> delete <VaultName>")
     println ("Backup an file        - java -jar big-ice.jar <AccessKey> <SecretKey> upload <VaultName> <FileToBackup>")
-    println ("Inventory for a Vault - java -jar big-ice.jar <AccessKey> <SecretKey> inventory <VaultName> <SNSTopicARN>")
+    println ()
+    println ("Asynchronous Operations")
+    println ("Inventory for a vault - java -jar big-ice.jar <AccessKey> <SecretKey> inventory <VaultName> <SNSTopicARN>")
+    println ()
+    println ("Information About Asynchronous Operations")
+    println ("List jobs for a vault - java -jar big-ice.jar <AccessKey> <SecretKey> jobs <VaultName>")
+    println ("Get result of a job   - java -jar big-ice.jar <AccessKey> <SecretKey> job <VaultName> <JobId>")
   }
   
   def upload(client: AmazonGlacierClient, credentials:AWSCredentials, vaultName: String, fileName: String): Unit = {
@@ -95,6 +106,12 @@ object BigIce {
           )
      val initJobResult = client.initiateJob(initJobRequest)
      println("Inventory listing job created: "+initJobResult.getJobId())
+  }
+
+  def job(client: AmazonGlacierClient, vaultName: String, jobId: String): Unit = {
+    val jobOutputRequest = new GetJobOutputRequest(vaultName, jobId, null)
+    val jobOutputResult = client.getJobOutput(jobOutputRequest)
+    IOUtils.copy(jobOutputResult.getBody, System.out)
   }
 
 }
