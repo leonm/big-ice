@@ -9,6 +9,8 @@ import com.amazonaws.services.glacier.model.ListVaultsRequest
 import com.amazonaws.services.glacier.model.ListJobsRequest
 import com.amazonaws.services.glacier.model.CreateVaultRequest
 import com.amazonaws.services.glacier.model.DeleteVaultRequest
+import com.amazonaws.services.glacier.model.InitiateJobRequest
+import com.amazonaws.services.glacier.model.JobParameters
 
 object BigIce {
 
@@ -32,6 +34,7 @@ object BigIce {
         case "create" => create(client,args(3))
         case "delete" => delete(client,args(3))
         case "jobs" => jobs(client,args(3))
+        case "inventory" => inventory(client,args(3),args(4))
         case _ => printUsage
       }
     }
@@ -44,6 +47,7 @@ object BigIce {
     println ("Deleting a Vault      - java -jar big-ice.jar <AccessKey> <SecretKey> delete <VaultName>")
     println ("List Jobs for a Vault - java -jar big-ice.jar <AccessKey> <SecretKey> jobs <VaultName>")
     println ("Backup an file        - java -jar big-ice.jar <AccessKey> <SecretKey> upload <VaultName> <FileToBackup>")
+    println ("Inventory for a Vault - java -jar big-ice.jar <AccessKey> <SecretKey> inventory <VaultName> <SNSTopicARN>")
   }
   
   def upload(client: AmazonGlacierClient, credentials:AWSCredentials, vaultName: String, fileName: String): Unit = {
@@ -78,6 +82,19 @@ object BigIce {
   def delete(client: AmazonGlacierClient, vaultName: String): Unit = {
     client.deleteVault(new DeleteVaultRequest(vaultName))
     println("Vault Deleted: "+vaultName)
+  }
+
+  def inventory(client: AmazonGlacierClient, vaultName: String, snsTopicARN: String): Unit = {
+     val initJobRequest = new InitiateJobRequest()
+        .withVaultName(vaultName)
+        .withJobParameters(
+          new JobParameters()
+            .withType("inventory-retrieval")
+            .withSNSTopic(snsTopicARN)
+            .withDescription("Inventory Request")
+          )
+     val initJobResult = client.initiateJob(initJobRequest)
+     println("Inventory listing job created: "+initJobResult.getJobId())
   }
 
 }
