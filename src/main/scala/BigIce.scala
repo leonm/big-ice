@@ -1,7 +1,5 @@
 import java.io.File;
-
 import org.apache.commons.io.IOUtils
-
 import com.amazonaws.auth.AWSCredentials
 import com.amazonaws.auth.BasicAWSCredentials
 import com.amazonaws.services.glacier.AmazonGlacierClient
@@ -18,6 +16,8 @@ import com.amazonaws.services.glacier.model.GetJobOutputRequest
 
 object BigIce {
 
+  val ONE_MB = 1024 * 1024;
+
   def main(args: Array[String]) {
 
     if (args.length == 0) {
@@ -33,6 +33,7 @@ object BigIce {
       client.setEndpoint("https://glacier.us-east-1.amazonaws.com/");
 
       cmd match {
+        case "tree-hash" => treeHash(args(3))
         case "upload" => upload(client, credentials, args(3),args(4))
         case "vaults" => vaults(client)
         case "create" => create(client,args(3))
@@ -47,6 +48,9 @@ object BigIce {
   }
 
   def printUsage:Unit = {
+    println ("Utilities")
+    println ("Compute Tree Hash     - java -jar big-ice.jar <AccessKey> <SecretKey> tree-hash <FileName>")
+    println ()
     println ("Synchronous Operations")
     println ("Listing all vaults    - java -jar big-ice.jar <AccessKey> <SecretKey> vaults")
     println ("Creating a new vault  - java -jar big-ice.jar <AccessKey> <SecretKey> create <VaultName>")
@@ -61,6 +65,11 @@ object BigIce {
     println ("Get result of a job   - java -jar big-ice.jar <AccessKey> <SecretKey> job <VaultName> <JobId>")
   }
   
+  def treeHash(fileName: String) {
+    val treeHash = TreeHash.computeSHA256TreeHash(new File(fileName))
+    println(TreeHash.toHex(treeHash))
+  }
+
   def upload(client: AmazonGlacierClient, credentials:AWSCredentials, vaultName: String, fileName: String): Unit = {
     val atm = new ArchiveTransferManager(client, credentials);
     val result = atm.upload(vaultName, fileName, new File(fileName));
